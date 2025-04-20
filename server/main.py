@@ -6,10 +6,20 @@ import schemas
 from bs4 import BeautifulSoup
 from database import SessionLocal, engine
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 app = FastAPI(title="Bookmarking Service")
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 async def fetch_url_metadata(url: str):
@@ -61,7 +71,6 @@ async def create_bookmark(bookmark: schemas.BookmarkCreate, db: AsyncSession = D
     """Add a URL for read-it-later"""
     url_str = str(bookmark.url)
 
-    # Fetch title and description from URL
     title, description = await fetch_url_metadata(url_str)
 
     db_bookmark = models.Bookmark(

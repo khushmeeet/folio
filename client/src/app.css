@@ -1,82 +1,42 @@
-/* Import Tailwind CSS */
-@import "tailwindcss";
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
 
-@layer base {
-  html {
-    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Roboto Mono', Menlo, monospace;
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
   }
-
-  body {
-    @apply bg-neutral-900 text-neutral-200 antialiased;
-  }
-
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-neutral-800;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-neutral-600;
-  }
-
-  ::selection {
-    @apply bg-blue-800 text-white;
+  to {
+    transform: rotate(360deg);
   }
 }
 
-/* Simple developer UI */
-.dev-container {
-  @apply bg-neutral-800 border border-neutral-700 rounded-md overflow-hidden;
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }
 
-.dev-header {
-  @apply bg-neutral-800 border-b border-neutral-700 px-4 py-3 flex items-center text-sm font-medium text-neutral-300;
+.card {
+  padding: 2em;
 }
 
-.dev-section {
-  @apply p-4 border-b border-neutral-700;
-}
-
-.dev-button {
-  @apply bg-neutral-700 hover:bg-neutral-600 text-neutral-200 px-3 py-1.5 rounded text-sm font-medium transition-colors border border-neutral-600 focus:outline-none focus:ring-1 focus:ring-blue-500;
-}
-
-.dev-button-primary {
-  @apply bg-blue-600 hover:bg-blue-500 text-white border-blue-700;
-}
-
-.dev-input {
-  @apply bg-neutral-800 border border-neutral-700 text-neutral-200 px-3 py-1.5 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500;
-}
-
-/* Fixed table styles with better spacing */
-.dev-table {
-  @apply w-full text-sm border-collapse;
-}
-
-.dev-table th {
-  @apply px-6 py-3 text-left bg-neutral-800 text-neutral-400 font-medium border-b border-neutral-700;
-}
-
-.dev-table td {
-  @apply px-6 py-3 border-b border-neutral-700;
-}
-
-.dev-table tr:hover {
-  @apply bg-neutral-750;
-}
-
-/* For better column separation */
-.dev-table th:not(:last-child),
-.dev-table td:not(:last-child) {
-  @apply border-r border-neutral-700/50;
-}
-
-/* Status indicator */
-.status-active {
-  @apply inline-block w-2 h-2 bg-green-500 mr-2 rounded-full;
+.read-the-docs {
+  color: #888;
 }
