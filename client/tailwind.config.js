@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         mono: ['JetBrains Mono', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+        sans: ['IBM Plex Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
     },
   },

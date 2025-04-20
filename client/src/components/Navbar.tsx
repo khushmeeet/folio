@@ -1,31 +1,54 @@
-import React from 'react';
+import React from "react";
+import { Button } from "./ui/button";
+import { Separator } from "./ui/separator";
+import { PlusCircle, Archive, ArchiveRestore } from "lucide-react";
 
 type NavbarProps = {
-  onAddBookmark: () => void;
-  onToggleArchived: () => void;
-  showArchived: boolean;
+    onAddBookmark: () => void;
+    onToggleArchived: () => void;
+    showArchived: boolean;
 };
 
 const Navbar: React.FC<NavbarProps> = ({ onAddBookmark, onToggleArchived, showArchived }) => {
-  return (
-    <nav className="flex items-center justify-between p-4 bg-gray-800 text-white">
-      <div className="font-mono text-xl font-bold">Folio</div>
-      <div className="flex space-x-4">
-        <button 
-          onClick={onAddBookmark}
-          className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded font-mono text-sm"
-        >
-          + Add Bookmark
-        </button>
-        <button 
-          onClick={onToggleArchived}
-          className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded font-mono text-sm"
-        >
-          {showArchived ? 'Show Active' : 'Show Archived'}
-        </button>
-      </div>
-    </nav>
-  );
+    return (
+        <div className="fixed top-0 inset-x-0 px-2 z-50 flex justify-center bg-background/80 backdrop-blur-sm border-b">
+            <nav className="w-full max-w-6xl font-sans flex items-center justify-between py-2 px-2">
+                <div className="flex items-center">
+                    <h1 className="text-lg font-semibold font-sans tracking-tight">Folio</h1>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Button 
+                        variant="secondary" 
+                        size="sm" 
+                        onClick={onAddBookmark}
+                        className="font-sans flex items-center gap-1 h-7 text-xs"
+                    >
+                        <PlusCircle className="h-3 w-3" />
+                        Add Bookmark
+                    </Button>
+                    <Separator orientation="vertical" className="h-5" />
+                    <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={onToggleArchived}
+                        className="font-sans flex items-center gap-1 h-7 text-xs"
+                    >
+                        {showArchived ? (
+                            <>
+                                <ArchiveRestore className="h-3 w-3" />
+                                Show Active
+                            </>
+                        ) : (
+                            <>
+                                <Archive className="h-3 w-3" />
+                                Show Archived
+                            </>
+                        )}
+                    </Button>
+                </div>
+            </nav>
+        </div>
+    );
 };
 
 export default Navbar;

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Bookmark } from './BookmarkTable';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 type AddBookmarkModalProps = {
   isOpen: boolean;
@@ -28,48 +31,56 @@ const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({ isOpen, onClose, on
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white p-6 rounded-md w-full max-w-md font-mono">
-        <h2 className="text-xl mb-4 font-bold">Add Bookmark</h2>
-        <p className="text-sm text-gray-600 mb-4">
-          Enter the URL below. The title and description will be automatically fetched from the webpage.
-        </p>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add Bookmark</DialogTitle>
+          <DialogDescription>
+            Enter the URL below. The title and description will be automatically fetched from the webpage.
+          </DialogDescription>
+        </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block mb-1" htmlFor="url">URL</label>
-            <input
-              id="url"
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded font-mono"
-              placeholder="https://example.com"
-              required
-            />
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <label htmlFor="url" className="text-right text-sm font-medium">URL</label>
+              <div className="col-span-3">
+                <Input
+                  id="url"
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://example.com"
+                  className="w-full"
+                  required
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded"
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              size="sm"
+              onClick={onClose} 
               disabled={isSubmitting}
+              className="font-sans flex items-center gap-1 h-7 text-xs"
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded"
+            </Button>
+            <Button 
+              type="submit" 
+              variant="secondary"
+              size="sm"
               disabled={isSubmitting}
+              className="font-sans flex items-center gap-1 h-7 text-xs"
             >
               {isSubmitting ? 'Adding...' : 'Add'}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
