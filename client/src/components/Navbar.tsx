@@ -17,22 +17,12 @@ const Navbar: React.FC<NavbarProps> = ({ onAddBookmark, onToggleArchived, showAr
                     <h1 className="text-lg font-semibold font-sans tracking-tight">Folio</h1>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <Button 
-                        variant="secondary" 
-                        size="sm" 
-                        onClick={onAddBookmark}
-                        className="font-sans flex items-center gap-1 h-7 text-xs"
-                    >
+                    <Button variant="secondary" size="sm" onClick={onAddBookmark} className="font-sans flex items-center gap-1 h-7 text-xs">
                         <PlusCircle className="h-3 w-3" />
                         Add Bookmark
                     </Button>
                     <Separator orientation="vertical" className="h-5" />
-                    <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={onToggleArchived}
-                        className="font-sans flex items-center gap-1 h-7 text-xs"
-                    >
+                    <Button variant="outline" size="sm" onClick={onToggleArchived} className="font-sans flex items-center gap-1 h-7 text-xs">
                         {showArchived ? (
                             <>
                                 <ArchiveRestore className="h-3 w-3" />
