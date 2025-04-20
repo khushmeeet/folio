@@ -4,12 +4,12 @@
   import { fetchBookmarks, archiveBookmark } from './BookmarkService';
   import BookmarkTable from './BookmarkTable.svelte';
   import BookmarkStatus from './BookmarkStatus.svelte';
-  import AddBookmark from './AddBookmark.svelte';
 
+  export let showArchived = false;
+  
   let bookmarks: Bookmark[] = [];
   let loading = true;
   let error: string | null = null;
-  let showArchived = false;
 
   async function loadBookmarks() {
     loading = true;
@@ -36,40 +36,32 @@
     }
   }
 
-  function toggleArchived() {
-    showArchived = !showArchived;
-    loadBookmarks();
-  }
-
   // Listen for the toggle event from the header
-  function setupToggleListener() {
+  function setupEventListeners() {
     window.addEventListener('toggle-archived', () => {
-      toggleArchived();
+      loadBookmarks();
+    });
+    
+    window.addEventListener('bookmark-added', () => {
+      loadBookmarks();
     });
 
     return () => {
-      // Cleanup listener on component destruction
-      window.removeEventListener('toggle-archived', toggleArchived);
+      // Cleanup listeners on component destruction
+      window.removeEventListener('toggle-archived', loadBookmarks);
+      window.removeEventListener('bookmark-added', loadBookmarks);
     };
   }
 
   onMount(() => {
-    const cleanup = setupToggleListener();
+    const cleanup = setupEventListeners();
     loadBookmarks();
     
     return cleanup;
   });
-
-  function handleBookmarkAdded() {
-    loadBookmarks();
-  }
 </script>
 
-<div class="w-full p-4">
-  {#if !showArchived}
-    <AddBookmark on:bookmarkAdded={handleBookmarkAdded} />
-  {/if}
-
+<div class="w-full">
   <BookmarkStatus 
     {loading} 
     {error} 

@@ -3,6 +3,8 @@
 
   const dispatch = createEventDispatcher();
   
+  export let headerMode = false; // New prop to handle header positioning
+  
   let url = '';
   let isSubmitting = false;
   let error: string | null = null;
@@ -57,35 +59,35 @@
   }
 </script>
 
-<div class="mb-4">
+<div class="relative">
   <button 
-    class="bg-blue-500 text-white py-2 px-4 rounded font-medium text-sm hover:bg-blue-600 transition-colors"
+    class="dev-button {!headerMode && !showForm ? 'dev-button-primary' : ''}"
     on:click={toggleForm}
   >
-    {showForm ? 'Cancel' : '+ Add Bookmark'}
+    {showForm ? 'Cancel' : 'Add Bookmark'}
   </button>
 
   {#if showForm}
-    <div class="mt-4 p-4 bg-gray-50 rounded border border-gray-200">
+    <div class="{headerMode ? 'absolute right-0 top-10 z-10 w-80' : 'mt-3'} p-3 bg-neutral-800 border border-neutral-700 rounded shadow-lg">
       <form on:submit|preventDefault={handleSubmit}>
-        <div class="flex gap-2">
+        <div class="flex items-center gap-2">
           <input
             type="text"
-            placeholder="Enter URL"
+            placeholder="https://example.com"
             bind:value={url}
             disabled={isSubmitting}
-            class="flex-1 p-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            class="dev-input flex-1"
           />
           <button 
             type="submit" 
             disabled={isSubmitting || !url}
-            class="bg-green-500 text-white py-2 px-4 rounded text-sm disabled:opacity-70 disabled:bg-gray-500 disabled:cursor-not-allowed hover:bg-green-600 transition-colors"
+            class="dev-button {url ? 'dev-button-primary' : ''} disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Adding...' : 'Add'}
           </button>
         </div>
         {#if error}
-          <div class="text-red-600 text-sm mt-2">{error}</div>
+          <div class="mt-2 text-sm text-red-400">{error}</div>
         {/if}
       </form>
     </div>

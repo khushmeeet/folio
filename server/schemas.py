@@ -10,8 +10,8 @@ class BookmarkBase(BaseModel):
     description: Optional[str] = None
 
 
-class BookmarkCreate(BookmarkBase):
-    pass
+class BookmarkCreate(BaseModel):
+    url: HttpUrl
 
 
 class BookmarkResponse(BookmarkBase):
