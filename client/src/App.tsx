@@ -86,7 +86,7 @@ function App() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <Navbar onAddBookmark={() => setIsModalOpen(true)} onToggleArchived={() => setShowArchived(!showArchived)} showArchived={showArchived} />
+            <Navbar onAddBookmark={() => setIsModalOpen(true)} onToggleArchived={() => setShowArchived(!showArchived)} showArchived={showArchived} bookmarkCount={filteredBookmarks.length} />
             <main className="flex-1 container mx-auto p-2 pt-7">
                 {/* <h1 className="text-2xl font-bold mb-4 font-mono">
           {showArchived ? 'Archived Bookmarks' : 'Active Bookmarks'}
