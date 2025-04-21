@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./App.css";
+import "@/App.css";
 import Navbar from "./components/Navbar";
 import BookmarkTable, { Bookmark } from "./components/BookmarkTable";
 import AddBookmarkModal from "./components/AddBookmarkModal";
