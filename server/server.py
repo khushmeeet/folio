@@ -71,6 +71,17 @@ async def create_bookmark(bookmark: schemas.BookmarkCreate, db: AsyncSession = D
     """Add a URL for read-it-later"""
     url_str = str(bookmark.url)
 
+    # Check if URL already exists in the database
+    query = select(models.Bookmark).where(models.Bookmark.url == url_str)
+    result = await db.execute(query)
+    existing_bookmark = result.scalar_one_or_none()
+    
+    if existing_bookmark:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"URL already exists with bookmark ID {existing_bookmark.id}"
+        )
+
     title, description = await fetch_url_metadata(url_str)
 
     if description is None:

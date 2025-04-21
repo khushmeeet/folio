@@ -22,6 +22,19 @@ const convertToBookmark = (response: BookmarkResponse): Bookmark => ({
   archived: response.archived,
 });
 
+// Custom error class to include API response details
+export class ApiError extends Error {
+  status: number;
+  detail?: string;
+
+  constructor(status: number, message: string, detail?: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.detail = detail;
+  }
+}
+
 // Helper function for API requests
 async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -33,7 +46,20 @@ async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}`);
+    // Try to get detailed error information from response
+    let errorDetail: string | undefined;
+    try {
+      const errorData = await response.json();
+      errorDetail = errorData.detail;
+    } catch {
+      // If we can't parse the error as JSON, continue without detail
+    }
+
+    throw new ApiError(
+      response.status,
+      `API request failed with status ${response.status}`,
+      errorDetail
+    );
   }
 
   return await response.json() as T;

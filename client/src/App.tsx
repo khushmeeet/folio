@@ -3,14 +3,15 @@ import "./App.css";
 import Navbar from "./components/Navbar";
 import BookmarkTable, { Bookmark } from "./components/BookmarkTable";
 import AddBookmarkModal from "./components/AddBookmarkModal";
-import { fetchBookmarks, createBookmark, archiveBookmark } from "./api/bookmarkService";
+import { fetchBookmarks, createBookmark, archiveBookmark, ApiError } from "./api/bookmarkService";
 
 function App() {
     // State for bookmarks, modal visibility, and archive filter
     const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showArchived, setShowArchived] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isTableLoading, setIsTableLoading] = useState(false);
+    const [isAddingBookmark, setIsAddingBookmark] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     // Filter bookmarks based on archived status
@@ -19,7 +20,7 @@ function App() {
     // Fetch bookmarks when component mounts or when archived filter changes
     useEffect(() => {
         const loadBookmarks = async () => {
-            setIsLoading(true);
+            setIsTableLoading(true);
             setError(null);
             try {
                 const data = await fetchBookmarks(showArchived);
@@ -28,7 +29,7 @@ function App() {
                 setError("Failed to load bookmarks. Please try again later.");
                 console.error("Error loading bookmarks:", err);
             } finally {
-                setIsLoading(false);
+                setIsTableLoading(false);
             }
         };
 
@@ -37,7 +38,7 @@ function App() {
 
     // Handle adding a new bookmark
     const handleAddBookmark = async (newBookmark: Omit<Bookmark, "id">) => {
-        setIsLoading(true);
+        setIsAddingBookmark(true);
         setError(null);
         try {
             const createdBookmark = await createBookmark(newBookmark.url);
@@ -45,17 +46,23 @@ function App() {
             if (!showArchived) {
                 setBookmarks((prev) => [...prev, createdBookmark]);
             }
+            return Promise.resolve();
         } catch (err) {
-            setError("Failed to add bookmark. Please try again.");
+            // Don't set the error in main UI if it's a 409 conflict,
+            // as it will be handled by the modal
+            if (!(err instanceof ApiError) || err.status !== 409) {
+                setError("Failed to add bookmark. Please try again.");
+            }
             console.error("Error adding bookmark:", err);
+            return Promise.reject(err);
         } finally {
-            setIsLoading(false);
+            setIsAddingBookmark(false);
         }
     };
 
     // Handle toggling archive status
     const handleArchiveToggle = async (id: string) => {
-        setIsLoading(true);
+        setIsTableLoading(true);
         setError(null);
 
         // First optimistically update the UI
@@ -79,7 +86,7 @@ function App() {
                 setError("Failed to archive bookmark. Please try again.");
                 console.error("Error archiving bookmark:", err);
             } finally {
-                setIsLoading(false);
+                setIsTableLoading(false);
             }
         }
     };
@@ -96,7 +103,7 @@ function App() {
                 {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 font-mono">{error}</div>}
 
                 {/* Loading state */}
-                {isLoading ? (
+                {isTableLoading ? (
                     <div className="flex justify-center items-center py-8">
                         <div className="font-mono text-gray-600">Loading bookmarks...</div>
                     </div>
@@ -104,7 +111,7 @@ function App() {
                     <BookmarkTable bookmarks={filteredBookmarks} onArchive={handleArchiveToggle} />
                 )}
             </main>
-            <AddBookmarkModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddBookmark} />
+            <AddBookmarkModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddBookmark} isSubmitting={isAddingBookmark} />
         </div>
     );
 }
