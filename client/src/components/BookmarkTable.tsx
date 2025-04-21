@@ -20,7 +20,7 @@ type BookmarkTableProps = {
 const BookmarkTable: React.FC<BookmarkTableProps> = ({ bookmarks, onArchive }) => {
     return (
         <div className="w-full">
-            <Table className="font-sans text-sm">
+            <Table className=" text-sm">
                 <TableHeader>
                     <TableRow className="bg-muted/50">
                         <TableHead className={cn("w-10 font-medium py-1.5 px-2 text-sm text-left")}>#</TableHead>
@@ -50,7 +50,7 @@ const BookmarkTable: React.FC<BookmarkTableProps> = ({ bookmarks, onArchive }) =
                                     variant="outline"
                                     size="sm"
                                     onClick={() => onArchive(bookmark.id)}
-                                    className="font-sans flex items-center gap-1 h-6 text-sm px-2"
+                                    className=" flex items-center gap-1 h-6 text-sm px-2"
                                 >
                                     {bookmark.archived ? (
                                         <>
@@ -69,7 +69,7 @@ const BookmarkTable: React.FC<BookmarkTableProps> = ({ bookmarks, onArchive }) =
                     ))}
                 </TableBody>
             </Table>
-            {bookmarks.length === 0 && <div className="text-center py-6 text-muted-foreground font-sans text-sm">No bookmarks found.</div>}
+            {bookmarks.length === 0 && <div className="text-center py-6 text-muted-foreground  text-sm">No bookmarks found.</div>}
         </div>
     );
 };

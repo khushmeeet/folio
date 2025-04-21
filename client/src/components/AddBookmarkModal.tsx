@@ -66,17 +66,11 @@ const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({ isOpen, onClose, on
                             size="sm"
                             onClick={onClose}
                             disabled={isSubmitting}
-                            className="font-sans flex items-center gap-1 h-7 text-xs"
+                            className=" flex items-center gap-1 h-7 text-xs"
                         >
                             Cancel
                         </Button>
-                        <Button
-                            type="submit"
-                            variant="secondary"
-                            size="sm"
-                            disabled={isSubmitting}
-                            className="font-sans flex items-center gap-1 h-7 text-xs"
-                        >
+                        <Button type="submit" variant="secondary" size="sm" disabled={isSubmitting} className=" flex items-center gap-1 h-7 text-xs">
                             {isSubmitting ? "Adding..." : "Add"}
                         </Button>
                     </DialogFooter>

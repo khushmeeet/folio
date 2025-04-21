@@ -12,13 +12,13 @@ from sqlalchemy.future import select
 
 app = FastAPI(title="Bookmarking Service")
 
-# Enable CORS
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -72,6 +72,9 @@ async def create_bookmark(bookmark: schemas.BookmarkCreate, db: AsyncSession = D
     url_str = str(bookmark.url)
 
     title, description = await fetch_url_metadata(url_str)
+
+    if description is None:
+        description = "No description available"
 
     db_bookmark = models.Bookmark(
         url=url_str,
