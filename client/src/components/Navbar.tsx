@@ -8,7 +8,6 @@ type NavbarProps = {
     onAddBookmark: () => void;
     onToggleArchived: () => void;
     showArchived: boolean;
-    bookmarkCount: number;
 };
 
 const Navbar: React.FC<NavbarProps> = ({ onAddBookmark, onToggleArchived, showArchived, bookmarkCount }) => {
