@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Bookmark } from "./BookmarkTable";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 
 type AddBookmarkModalProps = {
     isOpen: boolean;
@@ -32,7 +32,7 @@ const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({ isOpen, onClose, on
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <Dialog open={isOpen} onOpenChange={(open: boolean) => !open && onClose()}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Add Bookmark</DialogTitle>
@@ -40,37 +40,42 @@ const AddBookmarkModal: React.FC<AddBookmarkModalProps> = ({ isOpen, onClose, on
                         Enter the URL below. The title and description will be automatically fetched from the webpage.
                     </DialogDescription>
                 </DialogHeader>
-                <form onSubmit={handleSubmit}>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <label htmlFor="url" className="text-right text-sm font-medium">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                            <label htmlFor="url" className="text-sm font-medium leading-none whitespace-nowrap peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                 URL
                             </label>
-                            <div className="col-span-3">
-                                <Input
-                                    id="url"
-                                    type="url"
-                                    value={url}
-                                    onChange={(e) => setUrl(e.target.value)}
-                                    placeholder="https://example.com"
-                                    className="w-full"
-                                    required
-                                />
-                            </div>
+                            <Input
+                                id="url"
+                                type="url"
+                                value={url}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUrl(e.target.value)}
+                                placeholder="https://example.com"
+                                className="flex-grow"
+                                required
+                                autoFocus
+                            />
                         </div>
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex justify-end gap-2 pt-2">
                         <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             onClick={onClose}
                             disabled={isSubmitting}
-                            className=" flex items-center gap-1 h-7 text-xs"
+                            className="h-9 px-4"
                         >
                             Cancel
                         </Button>
-                        <Button type="submit" variant="secondary" size="sm" disabled={isSubmitting} className=" flex items-center gap-1 h-7 text-xs">
+                        <Button 
+                            type="submit" 
+                            variant="default" 
+                            size="sm" 
+                            disabled={isSubmitting} 
+                            className="h-9 px-4"
+                        >
                             {isSubmitting ? "Adding..." : "Add"}
                         </Button>
                     </DialogFooter>
