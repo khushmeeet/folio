@@ -24,7 +24,7 @@ const BookmarkTable: React.FC<BookmarkTableProps> = ({ bookmarks, onArchive }) =
                 <TableHeader>
                     <TableRow className="bg-muted/50">
                         <TableHead className={cn("w-10 font-medium py-1.5 px-2 text-sm text-left")}>#</TableHead>
-                        <TableHead className={cn("font-medium py-1.5 px-2 text-sm text-left")}>Article</TableHead>
+                        <TableHead className={cn("w-[30%] font-medium py-1.5 px-2 text-sm text-left")}>Article</TableHead>
                         <TableHead className={cn("font-medium py-1.5 px-2 text-sm text-left")}>Description</TableHead>
                         <TableHead className={cn("w-28 font-medium py-1.5 px-2 text-sm text-left")}>Action</TableHead>
                     </TableRow>
