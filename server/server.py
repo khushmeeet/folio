@@ -15,10 +15,7 @@ app = FastAPI(title="Bookmarking Service")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # Local development
-        "v0-document-collaboration-tool.vercel.app",  # Replace with your actual Vercel domain
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

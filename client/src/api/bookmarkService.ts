@@ -42,7 +42,6 @@ async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T
         headers: {
             "Content-Type": "application/json",
         },
-        credentials: 'include',  // Include cookies and auth headers
         ...options,
     });
 
