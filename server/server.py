@@ -15,7 +15,10 @@ app = FastAPI(title="Bookmarking Service")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",  # Local development
+        "v0-document-collaboration-tool.vercel.app",  # Replace with your actual Vercel domain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -75,7 +78,7 @@ async def create_bookmark(bookmark: schemas.BookmarkCreate, db: AsyncSession = D
     query = select(models.Bookmark).where(models.Bookmark.url == url_str)
     result = await db.execute(query)
     existing_bookmark = result.scalar_one_or_none()
-    
+
     if existing_bookmark:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,

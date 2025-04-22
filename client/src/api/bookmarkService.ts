@@ -1,7 +1,7 @@
 import { Bookmark } from "../components/BookmarkTable";
 
 // Define the API base URL using environment variables with fallback
-const API_BASE_URL = import.meta.env.VITE_API_URL || "https://server-young-violet-9900.fly.dev ";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Type for the bookmark response from the server
 export interface BookmarkResponse {
@@ -42,6 +42,7 @@ async function apiRequest<T>(endpoint: string, options?: RequestInit): Promise<T
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: 'include',  // Include cookies and auth headers
         ...options,
     });
 
