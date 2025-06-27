@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import "./index.css";
 import Navbar from "./components/Navbar";
 import BookmarkTable, { Bookmark } from "./components/BookmarkTable";
+import PocketTable from "./components/PocketTable";
 import AddBookmarkModal from "./components/AddBookmarkModal";
 import { fetchBookmarks, createBookmark, archiveBookmark, ApiError } from "./api/bookmarkService";
+import { fetchPocketLinks, PocketLink } from "./api/pocketService";
 
 function App() {
     // State for bookmarks, modal visibility, and archive filter
@@ -13,28 +15,55 @@ function App() {
     const [isTableLoading, setIsTableLoading] = useState(false);
     const [isAddingBookmark, setIsAddingBookmark] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    
+    // Pocket state
+    const [showPocket, setShowPocket] = useState(false);
+    const [pocketLinks, setPocketLinks] = useState<PocketLink[]>([]);
 
     // Filter bookmarks based on archived status
     const filteredBookmarks = bookmarks.filter((bookmark) => bookmark.archived === showArchived);
 
     // Fetch bookmarks when component mounts or when archived filter changes
     useEffect(() => {
-        const loadBookmarks = async () => {
-            setIsTableLoading(true);
-            setError(null);
-            try {
-                const data = await fetchBookmarks(showArchived);
-                setBookmarks(data);
-            } catch (err) {
-                setError("Failed to load bookmarks. Please try again later.");
-                console.error("Error loading bookmarks:", err);
-            } finally {
-                setIsTableLoading(false);
-            }
-        };
+        if (!showPocket) {
+            const loadBookmarks = async () => {
+                setIsTableLoading(true);
+                setError(null);
+                try {
+                    const data = await fetchBookmarks(showArchived);
+                    setBookmarks(data);
+                } catch (err) {
+                    setError("Failed to load bookmarks. Please try again later.");
+                    console.error("Error loading bookmarks:", err);
+                } finally {
+                    setIsTableLoading(false);
+                }
+            };
 
-        loadBookmarks();
-    }, [showArchived]);
+            loadBookmarks();
+        }
+    }, [showArchived, showPocket]);
+
+    // Fetch pocket links when pocket view is active
+    useEffect(() => {
+        if (showPocket) {
+            const loadPocketLinks = async () => {
+                setIsTableLoading(true);
+                setError(null);
+                try {
+                    const data = await fetchPocketLinks("all"); // Load all pocket links
+                    setPocketLinks(data);
+                } catch (err) {
+                    setError("Failed to load pocket links. Please try again later.");
+                    console.error("Error loading pocket links:", err);
+                } finally {
+                    setIsTableLoading(false);
+                }
+            };
+
+            loadPocketLinks();
+        }
+    }, [showPocket]);
 
     // Handle adding a new bookmark
     const handleAddBookmark = async (newBookmark: Omit<Bookmark, "id">) => {
@@ -98,22 +127,28 @@ function App() {
                 onToggleArchived={() => setShowArchived(!showArchived)}
                 showArchived={showArchived}
                 bookmarkCount={filteredBookmarks.length}
+                onTogglePocket={() => setShowPocket(!showPocket)}
+                showPocket={showPocket}
             />
             <main className="flex-1 container mx-auto p-2 pt-7">
-                {/* <h1 className="text-2xl font-bold mb-4 font-mono">
-          {showArchived ? 'Archived Bookmarks' : 'Active Bookmarks'}
-        </h1> */}
-
                 {/* Error message */}
                 {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 font-mono">{error}</div>}
 
                 {/* Loading state */}
                 {isTableLoading ? (
                     <div className="flex justify-center items-center py-8">
-                        <div className="font-mono text-gray-600">Loading bookmarks...</div>
+                        <div className="font-mono text-gray-600">
+                            {showPocket ? 'Loading pocket links...' : 'Loading bookmarks...'}
+                        </div>
                     </div>
                 ) : (
-                    <BookmarkTable bookmarks={filteredBookmarks} onArchive={handleArchiveToggle} />
+                    <>
+                        {showPocket ? (
+                            <PocketTable pocketLinks={pocketLinks} />
+                        ) : (
+                            <BookmarkTable bookmarks={filteredBookmarks} onArchive={handleArchiveToggle} />
+                        )}
+                    </>
                 )}
             </main>
             <AddBookmarkModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAdd={handleAddBookmark} isSubmitting={isAddingBookmark} />

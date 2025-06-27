@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Bookmark } from "./BookmarkTable";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../components/ui/dialog";
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Alert, AlertDescription } from "../components/ui/alert";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "./ui/dialog.tsx";
+import { Button } from "./ui/button.tsx";
+import { Input } from "./ui/input.tsx";
+import { Alert, AlertDescription } from "./ui/alert.tsx";
 import { ApiError } from "../api/bookmarkService";
 
 type AddBookmarkModalProps = {

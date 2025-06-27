@@ -22,3 +22,16 @@ class BookmarkResponse(BookmarkBase):
 
     class Config:
         from_attributes = True
+
+
+class PocketLinkResponse(BaseModel):
+    id: int
+    title: Optional[str] = None
+    url: str
+    time_added: int
+    tags: Optional[str] = None
+    status: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

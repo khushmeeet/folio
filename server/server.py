@@ -5,7 +5,7 @@ import models
 import schemas
 from bs4 import BeautifulSoup
 from database import SessionLocal, engine
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -124,3 +124,22 @@ async def archive_bookmark(bookmark_id: int, db: AsyncSession = Depends(get_db))
     await db.commit()
     await db.refresh(bookmark)
     return bookmark
+
+
+@app.get("/pocket-links/", response_model=List[schemas.PocketLinkResponse])
+async def list_pocket_links(
+    status_filter: str = Query("unread", description="Filter by status: unread, archive, or all"), 
+    db: AsyncSession = Depends(get_db)
+):
+    """List Pocket links with optional status filter"""
+    query = select(models.PocketLink)
+    
+    if status_filter != "all":
+        query = query.where(models.PocketLink.status == status_filter)
+    
+    # Order by time_added descending (newest first)
+    query = query.order_by(models.PocketLink.time_added.desc())
+    
+    result = await db.execute(query)
+    pocket_links = result.scalars().all()
+    return pocket_links
